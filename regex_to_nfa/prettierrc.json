@@ -1,0 +1,19 @@
+{
+  "name": "homework1",
+  "version": "1.0.0",
+  "description": "Homework 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require esm src/__tests__/**/*.js"
+  },
+  "author": "Aidan O'Donnell",
+  "license": "ISC",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.8.1",
+    "mocha": "^8.1.3"
+  }
+}
