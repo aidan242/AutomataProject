@@ -1,3 +1,5 @@
+//parses a regex using shunting yard algorithm to create a postfix notation string
+
 const opPrecedent = {
   "*": 0,
   ".": 1,
@@ -10,6 +12,7 @@ function peek(stack) {
   return stack[stack.length - 1];
 }
 
+//adds a concat operator . to regex to make easier to create a postfix
 function addConcat(regex) {
   let output = "";
 
@@ -30,7 +33,7 @@ function addConcat(regex) {
   return output;
 }
 
-function formatRegex(regex) {
+export function formatRegex(regex) {
   let output = "";
   let opStack = [];
 

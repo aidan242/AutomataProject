@@ -1,11 +1,12 @@
 //Creates an NFA using Thompson's Construction algorithm
-//NFA is made up of nfaStates with an accept value, an object containing it's transiton,
+//NFA is made up of nfaStates with an accept value, an object containing it's transitons keyed by symbol,
 // and an array of the lambdaMoves from that state.
+// E is representative of lambda
 
 function nfaState(accepted) {
   return {
     accepted,
-    transition: {},
+    transitions: {},
     lambdaMoves: [],
   };
 }
@@ -28,7 +29,7 @@ function addLambdaMove(from, to) {
 }
 
 function addTransition(from, to, symbol) {
-  from.transition[symbol] = to;
+  from.transitions[symbol] = to;
 }
 
 function concatination(first, second) {
@@ -38,11 +39,11 @@ function concatination(first, second) {
 }
 
 function union(first, second) {
-  const start = createState(false);
+  const start = nfaState(false);
   addLambdaMove(start, first.start);
   addLambdaMove(start, second.start);
 
-  const end = createState(true);
+  const end = nfaState(true);
   addLambdaMove(first.end, end);
   first.end.accepted = false;
   addLambdaMove(second.end, end);
@@ -62,13 +63,13 @@ function star(first) {
   return { start, end };
 }
 
-export function toNFA(regex) {
-  if (regex == "E") {
-    return lambdaNFA();
-  }
+function toNFA(regex) {
+  // if (regex == "E") {
+  //   return createNFA(regex);
+  // }
 
   const stack = [];
-
+  // expression = formatRegex(regex);
   for (var character of regex) {
     switch (character) {
       case ".":
