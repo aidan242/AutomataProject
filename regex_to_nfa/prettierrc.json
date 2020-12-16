@@ -1,11 +1,7 @@
 {
-  "name": "homework1",
+  "name": "regex_to_nfa",
   "version": "1.0.0",
-  "description": "Homework 1",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --require esm src/__tests__/**/*.js"
-  },
   "author": "Aidan O'Donnell",
   "license": "ISC",
   "dependencies": {

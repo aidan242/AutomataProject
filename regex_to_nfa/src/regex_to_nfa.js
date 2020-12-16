@@ -1,3 +1,7 @@
+//Creates an NFA using Thompson's Construction algorithm
+//NFA is made up of nfaStates with an accept value, an object containing it's transiton,
+// and an array of the lambdaMoves from that state.
+
 function nfaState(accepted) {
   return {
     accepted,
@@ -6,7 +10,7 @@ function nfaState(accepted) {
   };
 }
 
-function singleNFA(symbol) {
+function createNFA(symbol) {
   const start = nfaState(false);
   const end = nfaState(true);
 
@@ -26,13 +30,6 @@ function addLambdaMove(from, to) {
 function addTransition(from, to, symbol) {
   from.transition[symbol] = to;
 }
-
-// function lambdaNFA(){
-//     const start=nfaState(false);
-//     const end=nfaState(end);
-//     addLambdaMove(start,end);
-//     return {start,end};
-// }
 
 function concatination(first, second) {
   addLambdaMove(first.end, second.start);
@@ -87,10 +84,8 @@ export function toNFA(regex) {
       case "*":
         stack.push(star(stack.pop()));
         break;
-      case "E":
-        stack.push(lamdbaNFA());
       default:
-        stack.push(singleNFA(character));
+        stack.push(createNFA(character));
         break;
     }
   }
