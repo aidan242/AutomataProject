@@ -3,6 +3,8 @@
 // and an array of the lambdaMoves from that state.
 // E is representative of lambda
 
+const formatRegex = require("./parse_regex");
+
 function nfaState(accepted) {
   return {
     accepted,
@@ -14,6 +16,7 @@ function nfaState(accepted) {
 function createNFA(symbol) {
   const start = nfaState(false);
   const end = nfaState(true);
+  states = {};
 
   if (symbol === "E") {
     addLambdaMove(start, end);
@@ -45,8 +48,8 @@ function union(first, second) {
 
   const end = nfaState(true);
   addLambdaMove(first.end, end);
-  first.end.accepted = false;
   addLambdaMove(second.end, end);
+  first.end.accepted = false;
   second.end.accepted = false;
 
   return { start, end };
@@ -57,8 +60,10 @@ function star(first) {
   const end = nfaState(true);
 
   addLambdaMove(start, first.start);
-  addLambdaMove(first.end, start);
   addLambdaMove(start, end);
+  addLambdaMove(first.end, start);
+  addLambdaMove(first.end, first.start);
+  first.end.accepted = false;
 
   return { start, end };
 }
@@ -69,18 +74,18 @@ function toNFA(regex) {
   // }
 
   const stack = [];
-  // expression = formatRegex(regex);
-  for (var character of regex) {
+  expression = formatRegex(regex);
+  for (var character of expression) {
     switch (character) {
       case ".":
-        second = stack.pop();
-        first = stack.pop();
-        stack.push(concatination(first, second));
+        const right = stack.pop();
+        const left = stack.pop();
+        stack.push(concatination(left, right));
         break;
       case "|":
-        second = stack.pop();
-        first = stack.pop();
-        stack.push(union(first, second));
+        const right2 = stack.pop();
+        const left2 = stack.pop();
+        stack.push(union(left2, right2));
         break;
       case "*":
         stack.push(star(stack.pop()));
@@ -92,3 +97,5 @@ function toNFA(regex) {
   }
   return stack.pop();
 }
+
+module.exports = toNFA;

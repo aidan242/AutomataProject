@@ -1,9 +1,9 @@
 //parses a regex using shunting yard algorithm to create a postfix notation string
 
 const opPrecedent = {
-  "*": 0,
+  "|": 0,
   ".": 1,
-  "|": 2,
+  "*": 2,
 };
 
 const operators = ["*", ".", "|"];
@@ -33,7 +33,7 @@ function addConcat(regex) {
   return output;
 }
 
-export function formatRegex(regex) {
+function formatRegex(regex) {
   let output = "";
   let opStack = [];
 
@@ -41,8 +41,8 @@ export function formatRegex(regex) {
     if (operators.includes(token)) {
       while (
         opStack.length > 0 &&
-        operators.includes(peek(opStack)) &&
-        opPrecedent[peek(opStack)] <= opPrecedent[token]
+        peek(opStack) !== "(" &&
+        opPrecedent[peek(opStack)] >= opPrecedent[token]
       ) {
         output += opStack.pop();
       }
@@ -65,3 +65,5 @@ export function formatRegex(regex) {
   }
   return output;
 }
+
+module.exports = formatRegex;

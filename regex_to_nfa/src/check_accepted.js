@@ -1,23 +1,75 @@
 // given some string and nfa, returns boolean representation of if that string is accepted
-function checkString(input, n) {
-  token = input.charAt(0);
+// function checkString(state, visited, input, index) {
+//   if (visited.includes(state)) {
+//     return false;
+//   }
 
-  if (n.start !== undefined) {
-    n = n.start;
-  }
+//   visited.push(state);
 
-  for (let i = 0; i < n.lambdaMoves.length; i++) {
-    if (checkString(input, n.lambdaMoves[i])) {
-      return true;
+//   if (input.length === index) {
+
+//     if (state.accepted) {
+//       return true;
+//     }
+
+//     if (state.lambdaMoves.some((s) => checkString(s, visited, input, index))) {
+//       return true;
+//     }
+
+//   } else {
+//     const next = state.transitions[input[index]];
+
+//     if (next) {
+//       if (checkString(next, visited, input, index + 1)) {
+//         return true;
+//       }
+
+//     } else {
+
+//       if (
+//         state.lambdaMoves.some((s) => checkString(s, visited, input, index))
+//       ) {
+//         return true;
+//       }
+
+//     }
+
+//     return false;
+//   }
+// }
+
+function addNext(state, nextStates, visited) {
+  if (state.lambdaMoves.length) {
+    for (const s of state.lambdaMoves) {
+      if (!visited.find((vs) => vs === s)) {
+        visited.push(s);
+        addNext(s, nextStates, visited);
+      }
     }
+  } else {
+    nextStates.push(state);
   }
-
-  if (n.transitions[token] !== 0) {
-    if (input.length == 1) {
-      return n.transitions[token].accepted;
-    } else if (checkString(input.substring(1), n.transitions[token])) {
-      return true;
-    }
-  }
-  return false;
 }
+
+function checkString(nfa, input) {
+  let currentStates = [nfa.start];
+
+  addNext(nfa.start, currentStates, []);
+
+  for (const token of input) {
+    const nextStates = [];
+
+    for (const state of currentStates) {
+      const nextState = state.transitions[token];
+      if (nextState) {
+        addNext(nextState, nextStates, []);
+      }
+    }
+
+    currentStates = nextStates;
+  }
+
+  return currentStates.find((s) => s.accepted) ? true : false;
+}
+
+module.exports = checkString;
