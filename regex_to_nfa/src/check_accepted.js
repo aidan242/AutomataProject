@@ -1,43 +1,6 @@
-// given some string and nfa, returns boolean representation of if that string is accepted
-// function checkString(state, visited, input, index) {
-//   if (visited.includes(state)) {
-//     return false;
-//   }
-
-//   visited.push(state);
-
-//   if (input.length === index) {
-
-//     if (state.accepted) {
-//       return true;
-//     }
-
-//     if (state.lambdaMoves.some((s) => checkString(s, visited, input, index))) {
-//       return true;
-//     }
-
-//   } else {
-//     const next = state.transitions[input[index]];
-
-//     if (next) {
-//       if (checkString(next, visited, input, index + 1)) {
-//         return true;
-//       }
-
-//     } else {
-
-//       if (
-//         state.lambdaMoves.some((s) => checkString(s, visited, input, index))
-//       ) {
-//         return true;
-//       }
-
-//     }
-
-//     return false;
-//   }
-// }
-
+//adds all possible states from a lambda move to the array of next states
+//avoids entering a loop of lambda moves by keeping an array of states visited
+//if no lambda moves, only adds the current state
 function addNext(state, nextStates, visited) {
   if (state.lambdaMoves.length) {
     for (const s of state.lambdaMoves) {
@@ -51,9 +14,9 @@ function addNext(state, nextStates, visited) {
   }
 }
 
+//pushes string though the nfa, returning the accept value of the state after all characters have been processed
 function checkString(nfa, input) {
-  let currentStates = [nfa.start];
-
+  let currentStates = [];
   addNext(nfa.start, currentStates, []);
 
   for (const token of input) {
@@ -68,7 +31,6 @@ function checkString(nfa, input) {
 
     currentStates = nextStates;
   }
-
   return currentStates.find((s) => s.accepted) ? true : false;
 }
 

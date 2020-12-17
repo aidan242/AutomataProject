@@ -17,13 +17,11 @@ function createNFA(symbol) {
   const start = nfaState(false);
   const end = nfaState(true);
   states = {};
-
   if (symbol === "E") {
     addLambdaMove(start, end);
   } else {
     addTransition(start, end, symbol);
   }
-
   return { start, end };
 }
 
@@ -48,8 +46,8 @@ function union(first, second) {
 
   const end = nfaState(true);
   addLambdaMove(first.end, end);
-  addLambdaMove(second.end, end);
   first.end.accepted = false;
+  addLambdaMove(second.end, end);
   second.end.accepted = false;
 
   return { start, end };
@@ -69,10 +67,6 @@ function star(first) {
 }
 
 function toNFA(regex) {
-  // if (regex == "E") {
-  //   return createNFA(regex);
-  // }
-
   const stack = [];
   expression = formatRegex(regex);
   for (var character of expression) {

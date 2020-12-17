@@ -12,7 +12,7 @@ function peek(stack) {
   return stack[stack.length - 1];
 }
 
-//adds a concat operator . to regex to make easier to create a postfix
+//adds a concat operator . to regex to make creating
 function addConcat(regex) {
   let output = "";
 
